@@ -1,0 +1,8 @@
+transformers[torch]==4.27.1
+peft==0.2.0
+accelerate==0.17.1
+bitsandbytes==0.37.1
+loralib
+Flask
+
+# pip install -r requirements.txt
