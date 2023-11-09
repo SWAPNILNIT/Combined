@@ -18,13 +18,13 @@ with open ('huggingface.txt','r') as file:
 login(token=huggingface_token)
 
 # Load peft config for pre-trained checkpoint etc.
-peft_model_id = "nitsw/finance"
-config = PeftConfig.from_pretrained(peft_model_id)
+peft_model_finance = "nitsw/finance"
+config = PeftConfig.from_pretrained(peft_model_finance)
 
 # # load LLM model and tokenizer
 model_finance = AutoModelForSeq2SeqLM.from_pretrained(config.base_model_name_or_path)
 tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path)
-model = PeftModel.from_pretrained(model_finance, peft_model_id)
+model = PeftModel.from_pretrained(model_finance, peft_model_finance)
 model.eval()
 
 print("Peft model loaded")
