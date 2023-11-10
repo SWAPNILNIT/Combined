@@ -43,6 +43,11 @@ model_finance.eval()
 
 print("Peft health & finance model loaded")
 
+openai.api_type = type
+openai.api_base = base
+openai.api_version = version
+os.environ["OPENAI_API_KEY"] = key
+openai.api_key = key
 
 def remove_repeated_phrases_and_sentences(text):
   # Split the text into sentences
