@@ -156,40 +156,38 @@ def health_endpoint():
             input_ids = tokenizer(prompt, return_tensors="pt", truncation=True).input_ids
             instruct_model_outputs = model_health.generate(input_ids=input_ids, generation_config=GenerationConfig(max_new_tokens=10, num_beams=1))
             domain = tokenizer.decode(instruct_model_outputs[0], skip_special_tokens=True)
-            print("-"*25)
-            print(question)
 
             start=time.time()
+            input_ids = tokenizer(question, return_tensors="pt",truncation=True).input_ids
+            input_token_count=len(input_ids[0])            
             if domain.lower() == "yes":
               input_ids = tokenizer(question, return_tensors="pt",truncation=True).input_ids
-              # health_model_outputs = model_health.generate(input_ids=input_ids, generation_config=GenerationConfig(min_new_tokens=100,max_new_tokens=500, num_beams=1))
-              # answer = tokenizer.decode(health_model_outputs[0], skip_special_tokens=True)
-              # print(answer)
               instruct_model_outputs = model.generate(input_ids=input_ids, generation_config=GenerationConfig(max_new_tokens=200, num_beams=1))
               Predicted_Answer = tokenizer.decode(instruct_model_outputs[0], skip_special_tokens=True)
               end=time.time()
               result = remove_repeated_phrases_and_sentences(Predicted_Answer)
               result_ids = tokenizer(result, return_tensors="pt",truncation=True).input_ids
-              total_token=len(result_ids[0])
+              output_token_count=len(result_ids[0])
+              total_token_count=input_token_count+output_token_count
               execution_time=end-start
-            #   result= textwrap.fill(result, width=100)
-              return result,execution_time,total_token
+              return result,execution_time,input_token_count,output_token_count,total_token_count
               # # print(f"Predicted Answer:{tokenizer.batch_decode(outputs.detach().cpu().numpy(), skip_special_tokens=True)[0]}")
 
             else:
               result="The question is not related to healthcare."
               result_ids = tokenizer(result, return_tensors="pt",truncation=True).input_ids
-              total_token=len(result_ids[0])
+              output_token_count=len(result_ids[0])
+              total_token_count=input_token_count+output_token_count
               end=time.time()
               execution_time=end-start
-              return result,execution_time,total_token
+              return result,execution_time,input_token_count,output_token_count,total_token_count
 
 
         # Call the health function with the input text
         result = health(input_text)
 
         # Return the result as JSON
-        return jsonify({'result': result[0],'execution time':result[1],'token used':result[2]})
+        return jsonify({'result': result[0],'execution time':result[1],'input token used':result[2],'output token used':result[3],'total token used':result[4]})
     except Exception as e:
         return jsonify({'error': str(e)})
 
