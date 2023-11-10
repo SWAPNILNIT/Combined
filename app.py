@@ -5,6 +5,8 @@ from huggingface_hub import login
 import re
 import torch
 from peft import PeftModel, PeftConfig
+import openai
+import os
 import time
 from flask_cors import CORS, cross_origin
 
@@ -186,6 +188,43 @@ def health_endpoint():
         # Call the health function with the input text
         result = health(input_text)
 
+        # Return the result as JSON
+        return jsonify({'result': result[0],'execution time':result[1],'input token used':result[2],'output token used':result[3],'total token used':result[4]})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+      
+# Define the general endpoint
+@app.route('/general', methods=['POST'])
+@cross_origin()
+def general_endpoint():
+    try:
+        # Get the input text from the request JSON
+        input_text = request.json['text']
+      
+        # Define the general chatbot function
+        def chatbot(query):    
+          start=time.time()
+          response = openai.ChatCompletion.create(
+              engine="gpt-35-turbo", # replace this value with the deployment name you chose when you deployed the associated model.
+              messages=[{"role": "system", "content": "Assistant is a large language model trained by OpenAI."},
+                  {"role": "user", "content": query}],
+              temperature=0,
+              max_tokens=1000,
+              top_p=0.95,
+              frequency_penalty=0,
+              presence_penalty=0,
+              stop=None)
+          end=time.time()
+          result =response['choices'][0]['message']['content']
+          execution_time=end-start
+          input_ids = tokenizer(query, return_tensors="pt",truncation=True).input_ids
+          input_token_count=len(input_ids[0]) 
+          output_ids = tokenizer(result, return_tensors="pt",truncation=True).input_ids
+          output_token_count=len(input_ids[0])
+          return result,execution_time,input_token_count,output_token_count,total_token_count
+
+        # Call the health function with the input text
+        result = chatbot(input_text)
         # Return the result as JSON
         return jsonify({'result': result[0],'execution time':result[1],'input token used':result[2],'output token used':result[3],'total token used':result[4]})
     except Exception as e:
