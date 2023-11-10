@@ -6,10 +6,12 @@ import re
 import torch
 from peft import PeftModel, PeftConfig
 import openai
+from dotenv import load_dotenv
 import os
 import time
 from flask_cors import CORS, cross_origin
 
+load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app,supports_credentials=True)
@@ -42,12 +44,15 @@ model_finance = PeftModel.from_pretrained(model_finance, peft_model_finance)
 model_finance.eval()
 
 print("Peft health & finance model loaded")
-
-openai.api_type = TYPE
-openai.api_base = BASE
-openai.api_version = VERSION
-os.environ["OPENAI_API_KEY"] = KEY
-openai.api_key = KEY
+type = os.environ.get('TYPE')
+openai.api_type = type
+base = os.environ.get('BASE')
+openai.api_base = base
+version = os.environ.get('VERSION')
+openai.api_version = version
+key = os.environ.get('KEY')
+os.environ["OPENAI_API_KEY"] = key
+openai.api_key = key
 
 def remove_repeated_phrases_and_sentences(text):
   # Split the text into sentences
