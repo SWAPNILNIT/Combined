@@ -231,6 +231,7 @@ def general_endpoint():
           input_token_count=len(input_ids[0]) 
           output_ids = tokenizer(result, return_tensors="pt",truncation=True).input_ids
           output_token_count=len(input_ids[0])
+          total_token_count=input_token_count + output_token_count
           return result,execution_time,input_token_count,output_token_count,total_token_count
 
         # Call the health function with the input text
