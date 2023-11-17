@@ -144,7 +144,7 @@ def finance_endpoint():
         result = finance(input_text)
 
         # Return the result as JSON
-        return jsonify({'result': result[0],'execution time':result[1],'input token used':result[2],'output token used':result[3],'total token used':result[4]})
+        return jsonify({'result': result[0],'execution_time':result[1],'input_token_used':result[2],'output_token_used':result[3],'total_token_used':result[4]})
     except Exception as e:
         return jsonify({'error': str(e)})
     
@@ -199,7 +199,7 @@ def health_endpoint():
         result = health(input_text)
 
         # Return the result as JSON
-        return jsonify({'result': result[0],'execution time':result[1],'input token used':result[2],'output token used':result[3],'total token used':result[4]})
+        return jsonify({'result': result[0],'execution_time':result[1],'input_token_used':result[2],'output_token_used':result[3],'total_token_used':result[4]})
     except Exception as e:
         return jsonify({'error': str(e)})
       
@@ -237,7 +237,7 @@ def general_endpoint():
         # Call the health function with the input text
         result = chatbot(input_text)
         # Return the result as JSON
-        return jsonify({'result': result[0],'execution time':result[1],'input token used':result[2],'output token used':result[3],'total token used':result[4]})
+        return jsonify({'result': result[0],'execution_time':result[1],'input_token_used':result[2],'output_token_used':result[3],'total_token_used':result[4]})
     except Exception as e:
         return jsonify({'error': str(e)})
 
